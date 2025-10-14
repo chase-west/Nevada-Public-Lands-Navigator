@@ -27,7 +27,7 @@ function App() {
 
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="absolute top-4 right-4 z-10 btn-primary shadow-lg text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2"
+          className="absolute top-4 left-4 z-10 btn-primary shadow-lg text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2"
         >
           {showFilters ? '✕ Close' : '🔍 Filters'}
         </button>

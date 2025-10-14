@@ -29,7 +29,7 @@ function Filters({ onClose }) {
   const activeFilterCount = Object.values(filters).filter(v => v !== null).length;
 
   return (
-    <div className="absolute top-16 right-2 sm:right-4 z-20 w-full max-w-xs sm:w-80 bg-white rounded-lg shadow-2xl border-2 border-nevada-200">
+    <div className="absolute top-16 left-2 sm:left-4 z-20 w-full max-w-xs sm:w-80 bg-white rounded-lg shadow-2xl border-2 border-nevada-200">
       <div className="flex justify-between items-center p-4 bg-nevada-600 text-white rounded-t-lg">
         <div>
           <h3 className="font-bold text-lg">Filters</h3>
