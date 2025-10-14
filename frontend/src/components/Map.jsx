@@ -141,6 +141,7 @@ function Map() {
             'Housing Development', '#FF6B6B',
             'Conservation', '#4ECDC4',
             'Recreation', '#45B7D1',
+            'Economic Development', '#9B59B6',
             '#95E1D3', // default
           ],
           'fill-opacity': [

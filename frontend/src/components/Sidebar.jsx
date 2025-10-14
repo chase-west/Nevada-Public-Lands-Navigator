@@ -7,8 +7,8 @@ function Sidebar() {
 
   if (!selectedParcel) {
     return (
-      <div className="w-96 bg-white shadow-xl p-6 overflow-y-auto">
-        <h2 className="text-2xl font-bold text-nevada-800 mb-4">
+      <div className="w-full lg:w-96 bg-white shadow-xl p-4 sm:p-6 overflow-y-auto max-h-64 lg:max-h-full">
+        <h2 className="text-xl sm:text-2xl font-bold text-nevada-800 mb-4">
           Nevada Public Lands Navigator
         </h2>
         <p className="text-gray-600 mb-4">
@@ -39,6 +39,10 @@ function Sidebar() {
                 <div className="w-6 h-6 bg-[#45B7D1] border-2 border-black rounded"></div>
                 <span>Recreation</span>
               </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-[#9B59B6] border-2 border-black rounded"></div>
+                <span>Economic Development</span>
+              </div>
             </div>
           </div>
         </div>
@@ -47,9 +51,9 @@ function Sidebar() {
   }
 
   return (
-    <div className="w-96 bg-white shadow-xl p-6 overflow-y-auto">
+    <div className="w-full lg:w-96 bg-white shadow-xl p-4 sm:p-6 overflow-y-auto max-h-96 lg:max-h-full">
       <div className="flex justify-between items-start mb-4">
-        <h2 className="text-xl font-bold text-nevada-800">Parcel Details</h2>
+        <h2 className="text-lg sm:text-xl font-bold text-nevada-800">Parcel Details</h2>
         <button
           onClick={() => dispatch(clearSelectedParcel())}
           className="text-gray-500 hover:text-gray-700 text-2xl leading-none"

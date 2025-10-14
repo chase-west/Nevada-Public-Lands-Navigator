@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "WebFetch(domain:www.congress.gov)",
+      "WebSearch",
+      "WebFetch(domain:www.clarkcountynv.gov)"
     ],
     "deny": [],
     "ask": []
