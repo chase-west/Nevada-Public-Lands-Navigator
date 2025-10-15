@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import parcelRoutes from './routes/parcels.js';
 import billRoutes from './routes/bills.js';
+import aiRoutes from './routes/ai.js';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/parcels', parcelRoutes);
 app.use('/api/bills', billRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

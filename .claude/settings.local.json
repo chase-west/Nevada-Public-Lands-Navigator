@@ -4,7 +4,8 @@
       "Bash(mkdir:*)",
       "WebFetch(domain:www.congress.gov)",
       "WebSearch",
-      "WebFetch(domain:www.clarkcountynv.gov)"
+      "WebFetch(domain:www.clarkcountynv.gov)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

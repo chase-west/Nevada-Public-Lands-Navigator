@@ -1,9 +1,36 @@
 import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
 import { clearSelectedParcel } from '../store/parcelsSlice';
+import axios from 'axios';
 
 function Sidebar() {
   const dispatch = useDispatch();
   const { selectedParcel } = useSelector((state) => state.parcels);
+  const [aiInsights, setAiInsights] = useState(null);
+  const [loadingAI, setLoadingAI] = useState(false);
+  const [aiError, setAiError] = useState(null);
+
+  // Fetch AI insights when parcel is selected
+  useEffect(() => {
+    if (selectedParcel && selectedParcel.id) {
+      setLoadingAI(true);
+      setAiError(null);
+      setAiInsights(null);
+
+      axios.get(`http://localhost:5000/api/ai/summary/${selectedParcel.id}`)
+        .then(response => {
+          setAiInsights(response.data);
+          setLoadingAI(false);
+        })
+        .catch(error => {
+          console.error('Error fetching AI insights:', error);
+          setAiError('Failed to load AI insights');
+          setLoadingAI(false);
+        });
+    } else {
+      setAiInsights(null);
+    }
+  }, [selectedParcel]);
 
   if (!selectedParcel) {
     return (
@@ -190,6 +217,169 @@ function Sidebar() {
             </div>
           </div>
         )}
+
+        {/* Divider */}
+        <div className="divider"></div>
+
+        {/* AI Insights Section */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="text-nevada-900">
+              <path d="M10 2L12 8L18 10L12 12L10 18L8 12L2 10L8 8L10 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+            </svg>
+            <h3 className="text-lg font-bold text-nevada-900">AI Analysis</h3>
+          </div>
+
+          {loadingAI && (
+            <div className="card">
+              <div className="flex items-center gap-3">
+                <div className="spinner"></div>
+                <span className="text-sm text-nevada-600">Generating insights...</span>
+              </div>
+            </div>
+          )}
+
+          {aiError && (
+            <div className="card border-2 border-red-200 bg-red-50">
+              <p className="text-sm text-red-700">{aiError}</p>
+            </div>
+          )}
+
+          {aiInsights && !loadingAI && (
+            <>
+              {/* Summary */}
+              <div className="card-elevated">
+                <p className="section-header">What This Means</p>
+                <p className="text-sm text-nevada-700 leading-relaxed">
+                  {aiInsights.summary}
+                </p>
+              </div>
+
+              {/* Impact Analysis */}
+              {aiInsights.impact_analysis && (
+                <div className="card">
+                  <p className="section-header">Impact Analysis</p>
+                  <div className="space-y-3 text-sm text-nevada-700">
+                    {(() => {
+                      const impacts = typeof aiInsights.impact_analysis === 'string'
+                        ? JSON.parse(aiInsights.impact_analysis)
+                        : aiInsights.impact_analysis;
+                      return (
+                        <>
+                          {impacts.environmental && (
+                            <div>
+                              <p className="font-semibold text-nevada-900 mb-1">🌲 Environmental</p>
+                              <p className="leading-relaxed">{impacts.environmental}</p>
+                            </div>
+                          )}
+                          {impacts.economic && (
+                            <div>
+                              <p className="font-semibold text-nevada-900 mb-1">💰 Economic</p>
+                              <p className="leading-relaxed">{impacts.economic}</p>
+                            </div>
+                          )}
+                          {impacts.community && (
+                            <div>
+                              <p className="font-semibold text-nevada-900 mb-1">👥 Community</p>
+                              <p className="leading-relaxed">{impacts.community}</p>
+                            </div>
+                          )}
+                          {impacts.cultural && impacts.cultural !== 'Not applicable' && (
+                            <div>
+                              <p className="font-semibold text-nevada-900 mb-1">🏛️ Cultural/Historical</p>
+                              <p className="leading-relaxed">{impacts.cultural}</p>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+              )}
+
+              {/* Stakeholders */}
+              {aiInsights.stakeholders && (
+                <div className="card bg-nevada-50">
+                  <p className="section-header">Key Stakeholders</p>
+                  <div className="space-y-3 text-sm text-nevada-700">
+                    {(() => {
+                      const stakeholders = typeof aiInsights.stakeholders === 'string'
+                        ? JSON.parse(aiInsights.stakeholders)
+                        : aiInsights.stakeholders;
+                      return (
+                        <>
+                          {stakeholders.supporters && (
+                            <div>
+                              <p className="font-semibold text-green-700 mb-1">✅ Likely Supporters</p>
+                              <p className="leading-relaxed">{stakeholders.supporters}</p>
+                            </div>
+                          )}
+                          {stakeholders.opponents && (
+                            <div>
+                              <p className="font-semibold text-red-700 mb-1">⚠️ Likely Opponents</p>
+                              <p className="leading-relaxed">{stakeholders.opponents}</p>
+                            </div>
+                          )}
+                          {stakeholders.neutral && (
+                            <div>
+                              <p className="font-semibold text-nevada-900 mb-1">⚖️ Mixed Interests</p>
+                              <p className="leading-relaxed">{stakeholders.neutral}</p>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+              )}
+
+              {/* Civic Actions */}
+              {aiInsights.civic_actions && (
+                <div className="card border-2 border-nevada-900 bg-white">
+                  <p className="section-header">Take Action</p>
+                  <div className="space-y-4 text-sm">
+                    {(() => {
+                      const actions = typeof aiInsights.civic_actions === 'string'
+                        ? JSON.parse(aiInsights.civic_actions)
+                        : aiInsights.civic_actions;
+                      return (
+                        <>
+                          {actions.representatives && (
+                            <div>
+                              <p className="font-semibold text-nevada-900 mb-2">📞 Contact Your Representatives</p>
+                              <p className="text-nevada-700 leading-relaxed">{actions.representatives}</p>
+                            </div>
+                          )}
+                          {actions.how_to_comment && (
+                            <div>
+                              <p className="font-semibold text-nevada-900 mb-2">💬 How to Comment</p>
+                              <p className="text-nevada-700 leading-relaxed">{actions.how_to_comment}</p>
+                            </div>
+                          )}
+                          {actions.organizations && (
+                            <div>
+                              <p className="font-semibold text-nevada-900 mb-2">🤝 Organizations</p>
+                              <p className="text-nevada-700 leading-relaxed">{actions.organizations}</p>
+                            </div>
+                          )}
+                          {actions.next_steps && (
+                            <div className="bg-nevada-50 p-4 rounded-xl -mx-2">
+                              <p className="font-semibold text-nevada-900 mb-2">⚡ Next Steps</p>
+                              <p className="text-nevada-700 leading-relaxed">{actions.next_steps}</p>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+                  <button className="btn-primary w-full mt-4">
+                    Contact Your Representatives
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

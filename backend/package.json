@@ -10,17 +10,22 @@
     "ingest:blm": "node src/scripts/ingestBLMData.js",
     "ingest:congress": "node src/scripts/ingestCongressData.js"
   },
-  "keywords": ["nevada", "public-lands", "geospatial"],
+  "keywords": [
+    "nevada",
+    "public-lands",
+    "geospatial"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
+    "axios": "^1.6.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "pg": "^8.11.3",
-    "axios": "^1.6.2",
+    "express": "^4.18.2",
     "helmet": "^7.1.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "openai": "^6.3.0",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
