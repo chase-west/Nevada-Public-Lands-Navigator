@@ -8,7 +8,10 @@
   }
 
   body {
-    @apply font-sans antialiased;
+    @apply font-sans antialiased bg-nevada-50 text-nevada-900;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv11', 'ss01';
   }
 
   * {
@@ -17,16 +20,133 @@
 }
 
 @layer components {
+  /* Modern Button Styles */
   .btn-primary {
-    @apply px-4 py-2 bg-nevada-600 text-white rounded-lg hover:bg-nevada-700 transition-colors duration-200;
+    @apply relative overflow-hidden px-6 py-2.5 bg-nevada-900 text-white text-sm font-medium
+           rounded-xl border border-nevada-900
+           transition-all duration-300 ease-out
+           hover:bg-nevada-800 hover:shadow-hard hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-none;
   }
 
   .btn-secondary {
-    @apply px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200;
+    @apply relative px-6 py-2.5 bg-white text-nevada-900 text-sm font-medium
+           rounded-xl border-2 border-nevada-200
+           transition-all duration-300 ease-out
+           hover:border-nevada-900 hover:shadow-medium hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-none;
   }
 
+  .btn-ghost {
+    @apply px-6 py-2.5 text-nevada-700 text-sm font-medium
+           rounded-xl border-2 border-transparent
+           transition-all duration-200
+           hover:bg-nevada-100 hover:text-nevada-900;
+  }
+
+  /* Sophisticated Card System */
   .card {
-    @apply bg-white rounded-lg shadow-md p-4;
+    @apply bg-white rounded-2xl p-6
+           border border-nevada-100
+           transition-all duration-300 ease-out
+           hover:border-nevada-200 hover:shadow-soft;
+  }
+
+  .card-elevated {
+    @apply bg-white rounded-2xl p-6
+           shadow-medium border border-nevada-100
+           transition-all duration-300 ease-out
+           hover:shadow-hard hover:-translate-y-1;
+  }
+
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-lg rounded-2xl p-6
+           border border-white/20 shadow-soft
+           transition-all duration-300;
+  }
+
+  /* Modern Input Styles */
+  .input-modern {
+    @apply w-full px-4 py-3
+           bg-white rounded-xl
+           border-2 border-nevada-200
+           text-nevada-900 text-sm
+           transition-all duration-200 ease-out
+           placeholder:text-nevada-400
+           focus:outline-none focus:border-nevada-900 focus:ring-4 focus:ring-nevada-900/10
+           hover:border-nevada-300;
+  }
+
+  .select-modern {
+    @apply w-full px-4 py-3
+           bg-white rounded-xl
+           border-2 border-nevada-200
+           text-nevada-900 text-sm font-medium
+           transition-all duration-200 ease-out
+           focus:outline-none focus:border-nevada-900 focus:ring-4 focus:ring-nevada-900/10
+           hover:border-nevada-300
+           appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23212529' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 3rem;
+  }
+
+  /* Badge Styles */
+  .badge {
+    @apply inline-flex items-center px-3 py-1
+           rounded-full text-xs font-semibold
+           border transition-all duration-200;
+  }
+
+  .badge-primary {
+    @apply bg-nevada-900 text-white border-nevada-900;
+  }
+
+  .badge-secondary {
+    @apply bg-nevada-100 text-nevada-900 border-nevada-200;
+  }
+
+  /* Section Headers */
+  .section-header {
+    @apply text-sm font-semibold text-nevada-500 uppercase tracking-wider mb-3;
+  }
+
+  /* Divider */
+  .divider {
+    @apply h-px bg-nevada-200 my-6;
+  }
+}
+
+@layer utilities {
+  /* Custom Scrollbar */
+  .scrollbar-modern::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-modern::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-modern::-webkit-scrollbar-thumb {
+    background: theme('colors.nevada.300');
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+
+  .scrollbar-modern::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.nevada.400');
+  }
+
+  /* Text Effects */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Smooth Animations */
+  .animate-in {
+    animation: slideUp 0.4s ease-out;
   }
 }
 
@@ -38,4 +158,34 @@
 .mapboxgl-canvas-container {
   height: 100%;
   width: 100%;
+}
+
+/* Customize Mapbox Controls */
+.mapboxgl-ctrl-group {
+  @apply rounded-xl border-2 border-nevada-200 shadow-medium overflow-hidden;
+  background: white !important;
+}
+
+.mapboxgl-ctrl-group button {
+  @apply transition-all duration-200;
+}
+
+.mapboxgl-ctrl-group button:hover {
+  @apply bg-nevada-100;
+}
+
+/* Loading Spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  border: 2px solid theme('colors.nevada.200');
+  border-top-color: theme('colors.nevada.900');
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 0.6s linear infinite;
 }
