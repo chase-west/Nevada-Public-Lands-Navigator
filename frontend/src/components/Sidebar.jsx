@@ -2,6 +2,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { clearSelectedParcel } from '../store/parcelsSlice';
 import axios from 'axios';
+import Accordion from './Accordion';
+import { ImpactMeters } from './ImpactMeter';
+import StakeholderChart from './StakeholderChart';
 
 function Sidebar() {
   const dispatch = useDispatch();
@@ -248,133 +251,175 @@ function Sidebar() {
           {aiInsights && !loadingAI && (
             <>
               {/* Summary */}
-              <div className="card-elevated">
+              <div className="card-elevated animate-scale-in">
                 <p className="section-header">What This Means</p>
                 <p className="text-sm text-nevada-700 leading-relaxed">
                   {aiInsights.summary}
                 </p>
               </div>
 
-              {/* Impact Analysis */}
+              {/* Impact Analysis with Visual Meters */}
               {aiInsights.impact_analysis && (
-                <div className="card">
-                  <p className="section-header">Impact Analysis</p>
-                  <div className="space-y-3 text-sm text-nevada-700">
-                    {(() => {
-                      const impacts = typeof aiInsights.impact_analysis === 'string'
-                        ? JSON.parse(aiInsights.impact_analysis)
-                        : aiInsights.impact_analysis;
-                      return (
-                        <>
+                <div className="animate-slide-up stagger-1">
+                  <Accordion
+                    title="Impact Analysis"
+                    icon={
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 3V17M10 17L15 12M10 17L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" opacity="0.3"/>
+                      </svg>
+                    }
+                    defaultOpen={true}
+                    variant="elevated"
+                  >
+                  {(() => {
+                    const impacts = typeof aiInsights.impact_analysis === 'string'
+                      ? JSON.parse(aiInsights.impact_analysis)
+                      : aiInsights.impact_analysis;
+                    return (
+                      <>
+                        {/* Visual Impact Meters */}
+                        <div className="mb-6">
+                          <ImpactMeters impacts={impacts} />
+                        </div>
+
+                        {/* Detailed Text */}
+                        <div className="space-y-4 text-sm text-nevada-700 pt-4 border-t border-nevada-200">
                           {impacts.environmental && (
-                            <div>
-                              <p className="font-semibold text-nevada-900 mb-1">🌲 Environmental</p>
+                            <div className="p-4 bg-[#4ECDC4]/5 rounded-xl border border-[#4ECDC4]/20">
+                              <p className="font-semibold text-nevada-900 mb-2">🌲 Environmental</p>
                               <p className="leading-relaxed">{impacts.environmental}</p>
                             </div>
                           )}
                           {impacts.economic && (
-                            <div>
-                              <p className="font-semibold text-nevada-900 mb-1">💰 Economic</p>
+                            <div className="p-4 bg-[#45B7D1]/5 rounded-xl border border-[#45B7D1]/20">
+                              <p className="font-semibold text-nevada-900 mb-2">💰 Economic</p>
                               <p className="leading-relaxed">{impacts.economic}</p>
                             </div>
                           )}
                           {impacts.community && (
-                            <div>
-                              <p className="font-semibold text-nevada-900 mb-1">👥 Community</p>
+                            <div className="p-4 bg-[#9B59B6]/5 rounded-xl border border-[#9B59B6]/20">
+                              <p className="font-semibold text-nevada-900 mb-2">👥 Community</p>
                               <p className="leading-relaxed">{impacts.community}</p>
                             </div>
                           )}
                           {impacts.cultural && impacts.cultural !== 'Not applicable' && (
-                            <div>
-                              <p className="font-semibold text-nevada-900 mb-1">🏛️ Cultural/Historical</p>
+                            <div className="p-4 bg-[#E67E22]/5 rounded-xl border border-[#E67E22]/20">
+                              <p className="font-semibold text-nevada-900 mb-2">🏛️ Cultural/Historical</p>
                               <p className="leading-relaxed">{impacts.cultural}</p>
                             </div>
                           )}
-                        </>
-                      );
-                    })()}
-                  </div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                  </Accordion>
                 </div>
               )}
 
-              {/* Stakeholders */}
+              {/* Stakeholders with Chart */}
               {aiInsights.stakeholders && (
-                <div className="card bg-nevada-50">
-                  <p className="section-header">Key Stakeholders</p>
-                  <div className="space-y-3 text-sm text-nevada-700">
-                    {(() => {
-                      const stakeholders = typeof aiInsights.stakeholders === 'string'
-                        ? JSON.parse(aiInsights.stakeholders)
-                        : aiInsights.stakeholders;
-                      return (
-                        <>
+                <div className="animate-slide-up stagger-2">
+                  <Accordion
+                    title="Key Stakeholders"
+                    icon={
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M13 7C13 8.65685 11.6569 10 10 10C8.34315 10 7 8.65685 7 7C7 5.34315 8.34315 4 10 4C11.6569 4 13 5.34315 13 7Z" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M5 16C5 13.7909 6.79086 12 9 12H11C13.2091 12 15 13.7909 15 16V17H5V16Z" stroke="currentColor" strokeWidth="1.5"/>
+                      </svg>
+                    }
+                    defaultOpen={true}
+                    variant="default"
+                  >
+                  {(() => {
+                    const stakeholders = typeof aiInsights.stakeholders === 'string'
+                      ? JSON.parse(aiInsights.stakeholders)
+                      : aiInsights.stakeholders;
+                    return (
+                      <>
+                        {/* Visual Chart */}
+                        <div className="mb-6">
+                          <StakeholderChart stakeholders={stakeholders} />
+                        </div>
+
+                        {/* Detailed Text */}
+                        <div className="space-y-3 text-sm text-nevada-700 pt-4 border-t border-nevada-200">
                           {stakeholders.supporters && (
-                            <div>
-                              <p className="font-semibold text-green-700 mb-1">✅ Likely Supporters</p>
-                              <p className="leading-relaxed">{stakeholders.supporters}</p>
+                            <div className="p-3 bg-[#4ECDC4]/5 rounded-xl border border-[#4ECDC4]/20">
+                              <p className="font-semibold text-green-700 mb-2">✅ Likely Supporters</p>
+                              <p className="leading-relaxed text-nevada-700">{stakeholders.supporters}</p>
                             </div>
                           )}
                           {stakeholders.opponents && (
-                            <div>
-                              <p className="font-semibold text-red-700 mb-1">⚠️ Likely Opponents</p>
-                              <p className="leading-relaxed">{stakeholders.opponents}</p>
+                            <div className="p-3 bg-[#FF6B6B]/5 rounded-xl border border-[#FF6B6B]/20">
+                              <p className="font-semibold text-red-700 mb-2">⚠️ Likely Opponents</p>
+                              <p className="leading-relaxed text-nevada-700">{stakeholders.opponents}</p>
                             </div>
                           )}
                           {stakeholders.neutral && (
-                            <div>
-                              <p className="font-semibold text-nevada-900 mb-1">⚖️ Mixed Interests</p>
-                              <p className="leading-relaxed">{stakeholders.neutral}</p>
+                            <div className="p-3 bg-nevada-50 rounded-xl border border-nevada-200">
+                              <p className="font-semibold text-nevada-900 mb-2">⚖️ Mixed Interests</p>
+                              <p className="leading-relaxed text-nevada-700">{stakeholders.neutral}</p>
                             </div>
                           )}
-                        </>
-                      );
-                    })()}
-                  </div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                  </Accordion>
                 </div>
               )}
 
               {/* Civic Actions */}
               {aiInsights.civic_actions && (
-                <div className="card border-2 border-nevada-900 bg-white">
-                  <p className="section-header">Take Action</p>
-                  <div className="space-y-4 text-sm">
-                    {(() => {
-                      const actions = typeof aiInsights.civic_actions === 'string'
-                        ? JSON.parse(aiInsights.civic_actions)
-                        : aiInsights.civic_actions;
-                      return (
-                        <>
-                          {actions.representatives && (
-                            <div>
-                              <p className="font-semibold text-nevada-900 mb-2">📞 Contact Your Representatives</p>
-                              <p className="text-nevada-700 leading-relaxed">{actions.representatives}</p>
-                            </div>
-                          )}
-                          {actions.how_to_comment && (
-                            <div>
-                              <p className="font-semibold text-nevada-900 mb-2">💬 How to Comment</p>
-                              <p className="text-nevada-700 leading-relaxed">{actions.how_to_comment}</p>
-                            </div>
-                          )}
-                          {actions.organizations && (
-                            <div>
-                              <p className="font-semibold text-nevada-900 mb-2">🤝 Organizations</p>
-                              <p className="text-nevada-700 leading-relaxed">{actions.organizations}</p>
-                            </div>
-                          )}
-                          {actions.next_steps && (
-                            <div className="bg-nevada-50 p-4 rounded-xl -mx-2">
-                              <p className="font-semibold text-nevada-900 mb-2">⚡ Next Steps</p>
-                              <p className="text-nevada-700 leading-relaxed">{actions.next_steps}</p>
-                            </div>
-                          )}
-                        </>
-                      );
-                    })()}
-                  </div>
-                  <button className="btn-primary w-full mt-4">
-                    Contact Your Representatives
-                  </button>
+                <div className="animate-slide-up stagger-3">
+                  <Accordion
+                    title="Take Action"
+                    icon={
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 3L12 9L18 11L12 13L10 19L8 13L2 11L8 9L10 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                      </svg>
+                    }
+                    defaultOpen={false}
+                    variant="dark"
+                  >
+                  {(() => {
+                    const actions = typeof aiInsights.civic_actions === 'string'
+                      ? JSON.parse(aiInsights.civic_actions)
+                      : aiInsights.civic_actions;
+                    return (
+                      <div className="space-y-4 text-sm">
+                        {actions.representatives && (
+                          <div>
+                            <p className="font-semibold text-white mb-2">📞 Contact Your Representatives</p>
+                            <p className="text-white/80 leading-relaxed">{actions.representatives}</p>
+                          </div>
+                        )}
+                        {actions.how_to_comment && (
+                          <div>
+                            <p className="font-semibold text-white mb-2">💬 How to Comment</p>
+                            <p className="text-white/80 leading-relaxed">{actions.how_to_comment}</p>
+                          </div>
+                        )}
+                        {actions.organizations && (
+                          <div>
+                            <p className="font-semibold text-white mb-2">🤝 Organizations</p>
+                            <p className="text-white/80 leading-relaxed">{actions.organizations}</p>
+                          </div>
+                        )}
+                        {actions.next_steps && (
+                          <div className="bg-white/10 p-4 rounded-xl -mx-2 border border-white/20">
+                            <p className="font-semibold text-white mb-2">⚡ Next Steps</p>
+                            <p className="text-white/80 leading-relaxed">{actions.next_steps}</p>
+                          </div>
+                        )}
+                        <button className="btn-primary w-full mt-4 bg-white text-nevada-900 hover:bg-nevada-50">
+                          Contact Your Representatives
+                        </button>
+                      </div>
+                    );
+                  })()}
+                  </Accordion>
                 </div>
               )}
             </>
