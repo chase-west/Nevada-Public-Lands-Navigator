@@ -35,8 +35,8 @@ function Map() {
       minZoom: 5.5,
       maxZoom: 18,
       maxBounds: [
-        [-122.0, 34.5], // Southwest - prevent panning too far
-        [-112.0, 43.0]  // Northeast - prevent panning too far
+        [-121.0, 34.0], // Southwest - prevent panning too far
+        [-113.0, 43.0]  // Northeast - prevent panning too far
       ],
       renderWorldCopies: false,
     });
@@ -47,7 +47,7 @@ function Map() {
       // Mark map as loaded
       setMapLoaded(true);
 
-      // Add Nevada state boundary - elegant approach
+      // Add Nevada state boundary - reference only, no masking
       map.current.addSource('nevada-boundary', {
         type: 'geojson',
         data: {
@@ -56,67 +56,34 @@ function Map() {
           geometry: {
             type: 'Polygon',
             coordinates: [[
-              [-120.0, 42.0], [-120.0, 39.0], [-119.0, 39.0], [-119.0, 38.5],
-              [-118.5, 38.5], [-118.0, 38.0], [-117.0, 37.0], [-116.5, 36.5],
-              [-116.0, 36.0], [-115.0, 36.0], [-114.05, 36.0], [-114.05, 37.0],
-              [-114.05, 38.0], [-114.05, 39.0], [-114.05, 40.0], [-114.05, 41.0],
-              [-114.05, 42.0], [-120.0, 42.0]
+              // Simplified but accurate Nevada boundary
+              [-120.0, 42.0],
+              [-114.04, 42.0],
+              [-114.04, 41.0],
+              [-114.04, 37.0],
+              [-114.04, 36.0],
+              [-114.7, 35.0],
+              [-115.0, 36.0],
+              [-116.0, 36.0],
+              [-117.0, 37.0],
+              [-118.0, 38.0],
+              [-119.5, 39.0],
+              [-120.0, 39.0],
+              [-120.0, 42.0]
             ]]
           }
         }
       });
 
-      // Mask everything outside Nevada - complete coverage
-      map.current.addSource('outside-nevada', {
-        type: 'geojson',
-        data: {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Polygon',
-            coordinates: [
-              // Outer ring (entire world)
-              [[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]],
-              // Inner ring (Nevada boundary - creates a hole to show Nevada)
-              [[-120.0, 42.0], [-114.05, 42.0], [-114.05, 41.0], [-114.05, 40.0],
-               [-114.05, 39.0], [-114.05, 38.0], [-114.05, 37.0], [-114.05, 36.0],
-               [-115.0, 36.0], [-116.0, 36.0], [-116.5, 36.5], [-117.0, 37.0],
-               [-118.0, 38.0], [-118.5, 38.5], [-119.0, 38.5], [-119.0, 39.0],
-               [-120.0, 39.0], [-120.0, 42.0]]
-            ]
-          }
-        }
-      });
-
-      // Completely hide everything outside Nevada
-      map.current.addLayer({
-        id: 'outside-nevada-mask',
-        type: 'fill',
-        source: 'outside-nevada',
-        paint: {
-          'fill-color': '#E8E8E8', // Light neutral background
-          'fill-opacity': 1, // Completely opaque
-        },
-      });
-
-      // Hide all labels (cities, states, etc.) outside Nevada
-      const layers = map.current.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.type === 'symbol' && layer.layout && layer.layout['text-field']) {
-          // Hide all text labels everywhere (we'll only show Nevada labels by default)
-          map.current.setLayoutProperty(layer.id, 'visibility', 'none');
-        }
-      });
-
-      // Nevada border - on top of everything
+      // Nevada border - visual reference only
       map.current.addLayer({
         id: 'nevada-border',
         type: 'line',
         source: 'nevada-boundary',
         paint: {
-          'line-color': '#1e40af', // Darker professional blue
-          'line-width': 3,
-          'line-opacity': 0.9,
+          'line-color': '#0d0f10',
+          'line-width': 2,
+          'line-opacity': 0.4,
         },
       });
 
@@ -300,6 +267,27 @@ function Map() {
       }
     }
   }, [selectedParcel, mapLoaded]);
+
+  // Fly to search location when center/zoom changes from Redux
+  useEffect(() => {
+    if (mapLoaded && map.current) {
+      const currentCenter = map.current.getCenter();
+      const currentZoom = map.current.getZoom();
+
+      // Only fly if the center has actually changed (to avoid infinite loops)
+      const centerChanged = Math.abs(currentCenter.lng - center[0]) > 0.01 ||
+                           Math.abs(currentCenter.lat - center[1]) > 0.01;
+      const zoomChanged = Math.abs(currentZoom - zoom) > 0.1;
+
+      if (centerChanged || zoomChanged) {
+        map.current.flyTo({
+          center: center,
+          zoom: zoom,
+          duration: 1500,
+        });
+      }
+    }
+  }, [center, zoom, mapLoaded]);
 
   return (
     <div className="relative w-full h-full">
