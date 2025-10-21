@@ -6,6 +6,8 @@ import Accordion from './Accordion';
 import { ImpactMeters } from './ImpactMeter';
 import StakeholderChart from './StakeholderChart';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Sidebar() {
   const dispatch = useDispatch();
   const { selectedParcel } = useSelector((state) => state.parcels);
@@ -20,7 +22,7 @@ function Sidebar() {
       setAiError(null);
       setAiInsights(null);
 
-      axios.get(`http://localhost:5000/api/ai/summary/${selectedParcel.id}`)
+      axios.get(`${API_URL}/ai/summary/${selectedParcel.id}`)
         .then(response => {
           setAiInsights(response.data);
           setLoadingAI(false);
