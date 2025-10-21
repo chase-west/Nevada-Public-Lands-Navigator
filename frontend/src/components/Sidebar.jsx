@@ -1,19 +1,30 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { clearSelectedParcel } from '../store/parcelsSlice';
+import { addToComparison } from '../store/comparisonSlice';
 import axios from 'axios';
 import Accordion from './Accordion';
 import { ImpactMeters } from './ImpactMeter';
 import StakeholderChart from './StakeholderChart';
+import Dashboard from './Dashboard';
+import RepresentativeContact from './RepresentativeContact';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Sidebar() {
   const dispatch = useDispatch();
   const { selectedParcel } = useSelector((state) => state.parcels);
+  const { parcels: comparisonParcels } = useSelector((state) => state.comparison);
   const [aiInsights, setAiInsights] = useState(null);
   const [loadingAI, setLoadingAI] = useState(false);
   const [aiError, setAiError] = useState(null);
+
+  const handleAddToComparison = () => {
+    dispatch(addToComparison(selectedParcel));
+  };
+
+  const isInComparison = selectedParcel && comparisonParcels.some(p => p.id === selectedParcel.id);
+  const canAddToComparison = selectedParcel && !isInComparison && comparisonParcels.length < 3;
 
   // Fetch AI insights when parcel is selected
   useEffect(() => {
@@ -40,53 +51,7 @@ function Sidebar() {
   if (!selectedParcel) {
     return (
       <div className="w-full lg:w-[480px] bg-white border-r border-nevada-200 p-8 overflow-y-auto max-h-64 lg:max-h-full scrollbar-modern">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-nevada-900 mb-2 tracking-tight">
-            Nevada Public Lands Navigator
-          </h2>
-          <p className="text-nevada-600 text-sm leading-relaxed">
-            Interactive visualization of proposed federal land transfers across Nevada
-          </p>
-        </div>
-
-        <div className="space-y-6">
-          <div className="card-elevated animate-in">
-            <h3 className="font-semibold text-lg mb-3 text-nevada-900">About This Project</h3>
-            <p className="text-sm text-nevada-700 leading-relaxed">
-              This tool provides an interactive view of proposed federal land transfers in
-              Nevada, including data from the Northern Nevada Economic Development and
-              Conservation Act.
-            </p>
-          </div>
-
-          <div className="card border-2 border-nevada-900 animate-in" style={{ animationDelay: '0.1s' }}>
-            <h3 className="font-semibold text-lg mb-4 text-nevada-900">Land Use Types</h3>
-            <div className="space-y-3">
-              <div className="group flex items-center gap-3 p-2 -m-2 rounded-xl transition-all hover:bg-nevada-50">
-                <div className="w-10 h-10 bg-[#FF6B6B] rounded-lg border-2 border-nevada-900 flex-shrink-0 transition-transform group-hover:scale-110"></div>
-                <span className="text-sm font-medium text-nevada-900">Housing Development</span>
-              </div>
-              <div className="group flex items-center gap-3 p-2 -m-2 rounded-xl transition-all hover:bg-nevada-50">
-                <div className="w-10 h-10 bg-[#4ECDC4] rounded-lg border-2 border-nevada-900 flex-shrink-0 transition-transform group-hover:scale-110"></div>
-                <span className="text-sm font-medium text-nevada-900">Conservation</span>
-              </div>
-              <div className="group flex items-center gap-3 p-2 -m-2 rounded-xl transition-all hover:bg-nevada-50">
-                <div className="w-10 h-10 bg-[#45B7D1] rounded-lg border-2 border-nevada-900 flex-shrink-0 transition-transform group-hover:scale-110"></div>
-                <span className="text-sm font-medium text-nevada-900">Recreation</span>
-              </div>
-              <div className="group flex items-center gap-3 p-2 -m-2 rounded-xl transition-all hover:bg-nevada-50">
-                <div className="w-10 h-10 bg-[#9B59B6] rounded-lg border-2 border-nevada-900 flex-shrink-0 transition-transform group-hover:scale-110"></div>
-                <span className="text-sm font-medium text-nevada-900">Economic Development</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 bg-nevada-900 text-white rounded-2xl animate-in" style={{ animationDelay: '0.2s' }}>
-            <p className="text-sm leading-relaxed opacity-90">
-              Click on any parcel on the map to view detailed information about the proposed land transfer.
-            </p>
-          </div>
-        </div>
+        <Dashboard />
       </div>
     );
   }
@@ -100,15 +65,37 @@ function Sidebar() {
             {selectedParcel.name}
           </h2>
         </div>
-        <button
-          onClick={() => dispatch(clearSelectedParcel())}
-          className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl border-2 border-nevada-200 text-nevada-600 hover:border-nevada-900 hover:text-nevada-900 transition-all duration-200 hover:rotate-90"
-          aria-label="Close"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
-        </button>
+        <div className="flex gap-2">
+          {canAddToComparison && (
+            <button
+              onClick={handleAddToComparison}
+              className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl border-2 border-accent-blue text-accent-blue hover:bg-accent-blue hover:text-white transition-all duration-200"
+              aria-label="Add to comparison"
+              title="Add to comparison"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 3V13M3 8H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </button>
+          )}
+          {isInComparison && (
+            <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl border-2 border-green-500 bg-green-500 text-white"
+              title="In comparison">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8L6 11L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          )}
+          <button
+            onClick={() => dispatch(clearSelectedParcel())}
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl border-2 border-nevada-200 text-nevada-600 hover:border-nevada-900 hover:text-nevada-900 transition-all duration-200 hover:rotate-90"
+            aria-label="Close"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -372,58 +359,63 @@ function Sidebar() {
                 </div>
               )}
 
-              {/* Civic Actions */}
-              {aiInsights.civic_actions && (
-                <div className="animate-slide-up stagger-3">
-                  <Accordion
-                    title="Take Action"
-                    icon={
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M10 3L12 9L18 11L12 13L10 19L8 13L2 11L8 9L10 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-                      </svg>
-                    }
-                    defaultOpen={false}
-                    variant="dark"
-                  >
-                  {(() => {
-                    const actions = typeof aiInsights.civic_actions === 'string'
-                      ? JSON.parse(aiInsights.civic_actions)
-                      : aiInsights.civic_actions;
-                    return (
-                      <div className="space-y-4 text-sm">
-                        {actions.representatives && (
-                          <div>
-                            <p className="font-semibold text-white mb-2">📞 Contact Your Representatives</p>
-                            <p className="text-white/80 leading-relaxed">{actions.representatives}</p>
+              {/* Take Action - Always show, representative contact first */}
+              <div className="animate-slide-up stagger-3">
+                <Accordion
+                  title="Take Action"
+                  icon={
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M10 3L12 9L18 11L12 13L10 19L8 13L2 11L8 9L10 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </svg>
+                  }
+                  defaultOpen={true}
+                  variant="dark"
+                >
+                  <div className="space-y-6">
+                    {/* Representative Contact Component - FIRST */}
+                    <RepresentativeContact parcel={selectedParcel} />
+
+                    {/* AI Insights about civic actions - Collapsed by default */}
+                    {aiInsights?.civic_actions && (() => {
+                      const actions = typeof aiInsights.civic_actions === 'string'
+                        ? JSON.parse(aiInsights.civic_actions)
+                        : aiInsights.civic_actions;
+                      return (
+                        <details className="group">
+                          <summary className="cursor-pointer bg-white/10 p-4 rounded-xl border border-white/20 hover:bg-white/15 transition-all list-none">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-white text-sm">📋 Additional Action Steps & Resources</span>
+                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-white/70 transition-transform group-open:rotate-180">
+                                <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </div>
+                          </summary>
+                          <div className="mt-4 space-y-4 text-sm">
+                            {actions.how_to_comment && (
+                              <div className="bg-white/5 p-4 rounded-xl border border-white/20">
+                                <p className="font-semibold text-white mb-2">💬 How to Comment</p>
+                                <p className="text-white/80 leading-relaxed text-xs">{actions.how_to_comment}</p>
+                              </div>
+                            )}
+                            {actions.organizations && (
+                              <div className="bg-white/5 p-4 rounded-xl border border-white/20">
+                                <p className="font-semibold text-white mb-2">🤝 Organizations to Contact</p>
+                                <p className="text-white/80 leading-relaxed text-xs">{actions.organizations}</p>
+                              </div>
+                            )}
+                            {actions.next_steps && (
+                              <div className="bg-white/10 p-4 rounded-xl border border-white/30">
+                                <p className="font-semibold text-white mb-2">⚡ Detailed Next Steps</p>
+                                <p className="text-white/80 leading-relaxed text-xs">{actions.next_steps}</p>
+                              </div>
+                            )}
                           </div>
-                        )}
-                        {actions.how_to_comment && (
-                          <div>
-                            <p className="font-semibold text-white mb-2">💬 How to Comment</p>
-                            <p className="text-white/80 leading-relaxed">{actions.how_to_comment}</p>
-                          </div>
-                        )}
-                        {actions.organizations && (
-                          <div>
-                            <p className="font-semibold text-white mb-2">🤝 Organizations</p>
-                            <p className="text-white/80 leading-relaxed">{actions.organizations}</p>
-                          </div>
-                        )}
-                        {actions.next_steps && (
-                          <div className="bg-white/10 p-4 rounded-xl -mx-2 border border-white/20">
-                            <p className="font-semibold text-white mb-2">⚡ Next Steps</p>
-                            <p className="text-white/80 leading-relaxed">{actions.next_steps}</p>
-                          </div>
-                        )}
-                        <button className="btn-primary w-full mt-4 bg-white text-nevada-900 hover:bg-nevada-50">
-                          Contact Your Representatives
-                        </button>
-                      </div>
-                    );
-                  })()}
-                  </Accordion>
-                </div>
-              )}
+                        </details>
+                      );
+                    })()}
+                  </div>
+                </Accordion>
+              </div>
             </>
           )}
         </div>

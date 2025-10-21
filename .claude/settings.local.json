@@ -5,7 +5,9 @@
       "WebFetch(domain:www.congress.gov)",
       "WebSearch",
       "WebFetch(domain:www.clarkcountynv.gov)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Read(//Users/chase/Desktop/**)",
+      "WebFetch(domain:www.congressionalappchallenge.us)"
     ],
     "deny": [],
     "ask": []
