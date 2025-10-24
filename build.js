@@ -1,12 +1,13 @@
 import { execSync } from 'child_process';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Change to frontend directory
-process.chdir('frontend');
+const frontendDir = join(__dirname, 'frontend');
+process.chdir(frontendDir);
 
-// Add node_modules/.bin to PATH
-const binPath = join(process.cwd(), 'node_modules', '.bin');
-process.env.PATH = `${binPath}:${process.env.PATH}`;
-
-// Run build
-execSync('npm run build', { stdio: 'inherit' });
+// Run vite build directly with full path
+const vitePath = join(frontendDir, 'node_modules', '.bin', 'vite');
+execSync(`${vitePath} build`, { stdio: 'inherit' });
