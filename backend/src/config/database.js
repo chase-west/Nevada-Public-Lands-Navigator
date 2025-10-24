@@ -5,15 +5,27 @@ dotenv.config();
 
 const { Pool } = pg;
 
+// Use DATABASE_URL if available (for serverless), otherwise use individual env vars
+const connectionConfig = process.env.DATABASE_URL
+  ? {
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      }
+    }
+  : {
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      database: process.env.DB_NAME,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      ssl: {
+        rejectUnauthorized: false
+      }
+    };
+
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  ssl: {
-    rejectUnauthorized: false
-  },
+  ...connectionConfig,
   // Serverless-friendly settings
   max: 1, // Limit connections for serverless
   idleTimeoutMillis: 30000,
