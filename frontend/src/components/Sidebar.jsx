@@ -18,6 +18,33 @@ function Sidebar({ mobileOpen, onMobileClose }) {
   const [aiInsights, setAiInsights] = useState(null);
   const [loadingAI, setLoadingAI] = useState(false);
   const [aiError, setAiError] = useState(null);
+  const [dragStartY, setDragStartY] = useState(0);
+  const [dragCurrentY, setDragCurrentY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleTouchStart = (e) => {
+    setDragStartY(e.touches[0].clientY);
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    setDragCurrentY(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    const dragDistance = dragCurrentY - dragStartY;
+
+    // If dragged down more than 100px, close the drawer
+    if (dragDistance > 100) {
+      onMobileClose();
+    }
+
+    setIsDragging(false);
+    setDragStartY(0);
+    setDragCurrentY(0);
+  };
 
   const handleAddToComparison = () => {
     dispatch(addToComparison(selectedParcel));
@@ -51,16 +78,22 @@ function Sidebar({ mobileOpen, onMobileClose }) {
   // Shared classes for both states
   const baseClasses = "bg-white border-nevada-200 p-6 sm:p-8 overflow-y-auto scrollbar-modern";
   const desktopClasses = "lg:w-[480px] lg:h-full lg:border-r lg:relative";
+
+  // Calculate drag offset for visual feedback
+  const dragOffset = isDragging && dragCurrentY > dragStartY ? dragCurrentY - dragStartY : 0;
+
   const mobileClasses = `
     fixed bottom-0 left-0 right-0 z-30
     lg:static
-    transition-transform duration-300 ease-out
+    ${!isDragging ? 'transition-transform duration-300 ease-out' : ''}
     ${mobileOpen ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'}
     rounded-t-3xl lg:rounded-none
     border-t-4 lg:border-t-0
     shadow-[0_-4px_24px_rgba(0,0,0,0.15)] lg:shadow-none
     max-h-[85vh] lg:max-h-full
   `;
+
+  const mobileStyle = isDragging ? { transform: `translateY(${dragOffset}px)` } : {};
 
   if (!selectedParcel) {
     return (
@@ -73,14 +106,15 @@ function Sidebar({ mobileOpen, onMobileClose }) {
           />
         )}
 
-        <div className={`${baseClasses} ${desktopClasses} ${mobileClasses}`}>
-          {/* Mobile drag handle */}
-          <div className="lg:hidden flex justify-center mb-4">
-            <button
-              onClick={onMobileClose}
-              className="w-12 h-1.5 bg-nevada-300 rounded-full hover:bg-nevada-400 transition-colors"
-              aria-label="Close sidebar"
-            />
+        <div className={`${baseClasses} ${desktopClasses} ${mobileClasses}`} style={mobileStyle}>
+          {/* Mobile drag handle - swipe to close */}
+          <div
+            className="lg:hidden flex flex-col items-center py-3 cursor-grab active:cursor-grabbing touch-none"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div className="w-12 h-1.5 bg-nevada-400 rounded-full mb-1"></div>
           </div>
 
           <Dashboard />
@@ -99,15 +133,17 @@ function Sidebar({ mobileOpen, onMobileClose }) {
         />
       )}
 
-      <div className={`${baseClasses} ${desktopClasses} ${mobileClasses}`}>
-        {/* Mobile drag handle */}
-        <div className="lg:hidden flex justify-center mb-4">
-          <button
-            onClick={onMobileClose}
-            className="w-12 h-1.5 bg-nevada-300 rounded-full hover:bg-nevada-400 transition-colors"
-            aria-label="Close sidebar"
-          />
+      <div className={`${baseClasses} ${desktopClasses} ${mobileClasses}`} style={mobileStyle}>
+        {/* Mobile drag handle - swipe to close */}
+        <div
+          className="lg:hidden flex flex-col items-center py-3 cursor-grab active:cursor-grabbing touch-none"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="w-12 h-1.5 bg-nevada-400 rounded-full mb-1"></div>
         </div>
+
       <div className="flex justify-between items-start mb-6">
         <div>
           <p className="section-header mb-1">Parcel Details</p>
