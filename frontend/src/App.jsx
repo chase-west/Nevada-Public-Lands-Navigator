@@ -15,7 +15,8 @@ function App() {
   const [showFilters, setShowFilters] = useState(false);
   const [showGlossary, setShowGlossary] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  // Open sidebar by default on mobile so users see the branding/dashboard
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(true);
   const { loading, error, filters, selectedParcel } = useSelector((state) => state.parcels);
   const { parcels: comparisonParcels } = useSelector((state) => state.comparison);
 
