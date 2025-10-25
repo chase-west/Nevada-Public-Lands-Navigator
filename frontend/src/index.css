@@ -224,16 +224,26 @@
   }
 }
 
-/* Attribution - moved to bottom-left */
-.mapboxgl-ctrl-bottom-left {
-  bottom: 8px;
-  left: 8px;
-  z-index: 5;
+/* Hide Mapbox attribution on mobile to avoid overlap */
+@media (max-width: 1023px) {
+  .mapboxgl-ctrl-bottom-left,
+  .mapboxgl-ctrl-attrib {
+    display: none !important;
+  }
 }
 
-.mapboxgl-ctrl-attrib {
-  background-color: rgba(255, 255, 255, 0.8) !important;
-  backdrop-filter: blur(4px);
+/* Attribution - show on desktop only */
+@media (min-width: 1024px) {
+  .mapboxgl-ctrl-bottom-left {
+    bottom: 8px;
+    left: 8px;
+    z-index: 5;
+  }
+
+  .mapboxgl-ctrl-attrib {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(4px);
+  }
 }
 
 /* Loading Spinner */

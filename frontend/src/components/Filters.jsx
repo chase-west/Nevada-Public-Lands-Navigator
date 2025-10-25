@@ -29,8 +29,8 @@ function Filters({ onClose }) {
   const activeFilterCount = Object.values(filters).filter(v => v !== null).length;
 
   return (
-    <div className="absolute top-24 lg:top-20 left-4 right-4 sm:left-4 sm:right-auto z-20 sm:w-full sm:max-w-sm animate-slide-up">
-      <div className="bg-white rounded-2xl shadow-hard border-2 border-nevada-900 overflow-hidden max-h-[calc(100vh-7rem)] flex flex-col">
+    <div className="absolute top-16 lg:top-20 left-4 right-4 sm:left-4 sm:right-auto z-20 sm:w-full sm:max-w-sm animate-slide-up">
+      <div className="bg-white rounded-2xl shadow-hard border-2 border-nevada-900 overflow-hidden max-h-[calc(100vh-5rem)] flex flex-col">
         {/* Header */}
         <div className="bg-nevada-900 text-white px-6 py-5 flex justify-between items-center">
           <div>
@@ -52,6 +52,35 @@ function Filters({ onClose }) {
 
         {/* Filter Content */}
         <div className="p-6 space-y-5 overflow-y-auto flex-1">
+          {/* Quick Filter - Washoe County */}
+          <div className="pb-4 border-b border-nevada-200">
+            <label className="block text-xs font-semibold text-nevada-500 uppercase tracking-wider mb-2.5">
+              Quick Filter
+            </label>
+            <button
+              onClick={() => {
+                if (filters.county === 'Washoe') {
+                  handleFilterChange('county', '');
+                } else {
+                  handleFilterChange('county', 'Washoe');
+                }
+              }}
+              className={`w-full transition-all duration-200 ${
+                filters.county === 'Washoe'
+                  ? 'btn-primary'
+                  : 'btn-secondary'
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 14C8 14 13 10 13 6C13 3.23858 10.7614 1 8 1C5.23858 1 3 3.23858 3 6C3 10 8 14 8 14Z" stroke="currentColor" strokeWidth="1.5"/>
+                  <circle cx="8" cy="6" r="1.5" fill="currentColor"/>
+                </svg>
+                <span>Washoe County</span>
+              </div>
+            </button>
+          </div>
+
           {/* County Filter */}
           <div>
             <label className="block text-xs font-semibold text-nevada-500 uppercase tracking-wider mb-2.5">

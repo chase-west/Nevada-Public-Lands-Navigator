@@ -124,52 +124,34 @@ function App() {
 
         {/* Mobile Top Navigation Bar - MOBILE ONLY */}
         <div className="lg:hidden absolute top-0 left-0 right-0 z-10 p-3 bg-gradient-to-b from-black/20 via-black/10 to-transparent pointer-events-none">
-          <div className="pointer-events-auto flex flex-col gap-2 max-w-[250px]">
-            {/* Search Bar + Filters - Top Row */}
-            <div className="flex items-center gap-2">
-              <div className="flex-1 max-w-[200px]">
-                <SearchBar compact={true} />
-              </div>
-
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="btn-primary shadow-medium w-10 h-10 p-0 min-h-0 flex-shrink-0"
-                aria-label={showFilters ? 'Close filters' : 'Open filters'}
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </button>
+          <div className="pointer-events-auto flex items-center gap-2">
+            {/* Search Bar */}
+            <div className="flex-1 max-w-[180px]">
+              <SearchBar compact={true} />
             </div>
 
-            {/* Other Action Buttons - Second Row */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleWashoeFilter}
-                className={`shadow-medium transition-all duration-200 w-10 h-10 p-0 min-h-0 ${
-                  filters.county === 'Washoe'
-                    ? 'btn-primary'
-                    : 'btn-secondary'
-                }`}
-                aria-label="Toggle Washoe County filter"
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M8 14C8 14 13 10 13 6C13 3.23858 10.7614 1 8 1C5.23858 1 3 3.23858 3 6C3 10 8 14 8 14Z" stroke="currentColor" strokeWidth="1.5"/>
-                  <circle cx="8" cy="6" r="1.5" fill="currentColor"/>
-                </svg>
-              </button>
+            {/* Filters Button */}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="btn-primary shadow-medium w-10 h-10 p-0 min-h-0 flex-shrink-0"
+              aria-label={showFilters ? 'Close filters' : 'Open filters'}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </button>
 
-              <button
-                onClick={() => setShowGlossary(true)}
-                className="btn-secondary shadow-medium w-10 h-10 p-0 min-h-0"
-                aria-label="Open glossary"
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 12.5C3 11.837 3.26339 11.2011 3.73223 10.7322C4.20107 10.2634 4.83696 10 5.5 10H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M5.5 2H14V16H5.5C4.83696 16 4.20107 15.7366 3.73223 15.2678C3.26339 14.7989 3 14.163 3 13.5V4.5C3 3.83696 3.26339 3.20107 3.73223 2.73223C4.20107 2.26339 4.83696 2 5.5 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </button>
-            </div>
+            {/* Glossary Button */}
+            <button
+              onClick={() => setShowGlossary(true)}
+              className="btn-secondary shadow-medium w-10 h-10 p-0 min-h-0 flex-shrink-0"
+              aria-label="Open glossary"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 12.5C3 11.837 3.26339 11.2011 3.73223 10.7322C4.20107 10.2634 4.83696 10 5.5 10H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M5.5 2H14V16H5.5C4.83696 16 4.20107 15.7366 3.73223 15.2678C3.26339 14.7989 3 14.163 3 13.5V4.5C3 3.83696 3.26339 3.20107 3.73223 2.73223C4.20107 2.26339 4.83696 2 5.5 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            </button>
           </div>
         </div>
 
