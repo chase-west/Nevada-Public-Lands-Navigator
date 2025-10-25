@@ -196,24 +196,34 @@
 }
 
 /* Customize Mapbox Controls */
+.mapboxgl-ctrl-top-right {
+  z-index: 20 !important; /* Higher z-index to be above everything */
+  pointer-events: auto !important;
+}
+
 .mapboxgl-ctrl-group {
   @apply rounded-xl border-2 border-nevada-200 shadow-medium overflow-hidden;
   background: white !important;
-  z-index: 15 !important; /* Ensure controls are above gradient backgrounds */
+  pointer-events: auto !important;
 }
 
 .mapboxgl-ctrl-group button {
   @apply transition-all duration-200;
   pointer-events: auto !important; /* Ensure buttons are clickable */
+  cursor: pointer !important;
 }
 
 .mapboxgl-ctrl-group button:hover {
   @apply bg-nevada-100;
 }
 
+.mapboxgl-ctrl-group button:active {
+  background-color: #e5e7eb !important;
+}
+
 /* Position Mapbox controls */
 .mapboxgl-ctrl-top-right {
-  top: 100px; /* Move down on mobile to avoid our custom nav */
+  top: 70px; /* Move down on mobile to avoid our custom nav */
   right: 12px;
 }
 

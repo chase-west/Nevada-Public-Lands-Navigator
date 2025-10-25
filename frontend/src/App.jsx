@@ -123,8 +123,8 @@ function App() {
         <Map />
 
         {/* Mobile Top Navigation Bar - MOBILE ONLY */}
-        <div className="lg:hidden absolute top-0 left-0 right-0 z-10 p-3 bg-gradient-to-b from-black/20 via-black/10 to-transparent pointer-events-none">
-          <div className="pointer-events-auto flex items-center gap-2">
+        <div className="lg:hidden absolute top-0 left-0 z-10 p-3 pointer-events-none" style={{maxWidth: 'calc(100% - 80px)'}}>
+          <div className="pointer-events-auto flex items-center gap-2 bg-gradient-to-r from-black/20 via-black/10 to-transparent rounded-xl pr-4">
             {/* Search Bar */}
             <div className="flex-1 max-w-[180px]">
               <SearchBar compact={true} />
