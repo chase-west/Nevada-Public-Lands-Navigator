@@ -110,7 +110,7 @@ function Glossary({ isOpen, onClose }) {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 animate-fade-in">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-nevada-900/60 backdrop-blur-sm"
@@ -118,9 +118,9 @@ function Glossary({ isOpen, onClose }) {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-4xl max-h-[85vh] bg-white rounded-3xl shadow-hard border-2 border-nevada-900 overflow-hidden animate-scale-in">
+      <div className="relative w-full max-w-4xl max-h-[95vh] sm:max-h-[85vh] bg-white rounded-2xl sm:rounded-3xl shadow-hard border-2 border-nevada-900 overflow-hidden animate-scale-in flex flex-col">
         {/* Header */}
-        <div className="bg-nevada-900 text-white px-8 py-6">
+        <div className="bg-nevada-900 text-white px-4 sm:px-8 py-4 sm:py-6 flex-shrink-0">
           <div className="flex items-start justify-between mb-4">
             <div>
               <h2 className="text-2xl font-bold tracking-tight mb-2">Glossary of Terms</h2>
@@ -179,7 +179,7 @@ function Glossary({ isOpen, onClose }) {
         </div>
 
         {/* Content */}
-        <div className="p-8 overflow-y-auto max-h-[calc(85vh-250px)] scrollbar-modern">
+        <div className="p-4 sm:p-8 overflow-y-auto flex-1 scrollbar-modern">
           {filteredTerms.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-nevada-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -216,7 +216,7 @@ function Glossary({ isOpen, onClose }) {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-nevada-200 px-8 py-4 bg-nevada-50">
+        <div className="border-t border-nevada-200 px-4 sm:px-8 py-3 sm:py-4 bg-nevada-50 flex-shrink-0">
           <p className="text-xs text-nevada-600 text-center">
             Found {filteredTerms.length} of {GLOSSARY_TERMS.length} terms
           </p>

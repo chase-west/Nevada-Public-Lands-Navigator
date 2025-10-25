@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { setMapCenter, setMapZoom } from '../store/mapSlice';
 import axios from 'axios';
 
-function SearchBar() {
+function SearchBar({ compact = false }) {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -232,8 +232,78 @@ function SearchBar() {
     }
   };
 
+  if (compact) {
+    return (
+      <div className="relative w-full" ref={wrapperRef}>
+        <form onSubmit={handleSubmit} className="relative">
+          <div className="relative">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setSelectedIndex(-1);
+              }}
+              onKeyDown={handleKeyDown}
+              onFocus={() => {
+                if (suggestions.length > 0) setShowSuggestions(true);
+              }}
+              placeholder="Search..."
+              className="w-full pl-9 pr-3 py-2 bg-white rounded-xl border-2 border-nevada-200 text-nevada-900 text-sm focus:outline-none focus:border-nevada-900 shadow-medium"
+              disabled={loading}
+              autoComplete="off"
+            />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-nevada-400">
+              {loading ? (
+                <div className="spinner w-4 h-4"></div>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <circle cx="6" cy="6" r="4" stroke="currentColor" strokeWidth="1.5"/>
+                  <path d="M9 9L12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              )}
+            </div>
+          </div>
+
+          {/* Compact Suggestions */}
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="absolute top-full mt-2 left-0 right-0 bg-white rounded-xl border-2 border-nevada-900 shadow-hard overflow-hidden animate-slide-up max-h-60 overflow-y-auto">
+              {suggestions.map((suggestion, index) => (
+                <button
+                  key={suggestion.id}
+                  type="button"
+                  onClick={() => handleSelect(suggestion)}
+                  className={`w-full px-3 py-2 text-left transition-colors flex items-start gap-2 text-sm ${
+                    index === selectedIndex
+                      ? 'bg-nevada-900 text-white'
+                      : 'hover:bg-nevada-50 text-nevada-900'
+                  } ${index > 0 ? 'border-t border-nevada-200' : ''}`}
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="flex-shrink-0 mt-0.5">
+                    <path d="M6 11C6 11 10 8 10 5C10 3 8.5 1 6 1C3.5 1 2 3 2 5C2 8 6 11 6 11Z" stroke="currentColor" strokeWidth="1.2"/>
+                    <circle cx="6" cy="5" r="1" stroke="currentColor" strokeWidth="1"/>
+                  </svg>
+                  <div className="flex-1 min-w-0 truncate">
+                    {suggestion.text}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Compact Error */}
+          {error && (
+            <div className="absolute top-full mt-2 left-0 right-0 bg-nevada-900 text-white px-3 py-2 rounded-xl text-xs shadow-hard animate-slide-up">
+              {error}
+            </div>
+          )}
+        </form>
+      </div>
+    );
+  }
+
   return (
-    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-md px-4 sm:px-0" ref={wrapperRef}>
+    <div className="absolute top-20 sm:top-4 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-md px-4 sm:px-0" ref={wrapperRef}>
       <form onSubmit={handleSubmit} className="relative">
         <div className="flex gap-2">
           <div className="flex-1 relative">
@@ -320,13 +390,20 @@ function SearchBar() {
           </div>
           <button
             type="submit"
-            className="btn-primary shadow-medium px-8 whitespace-nowrap"
+            className="btn-primary shadow-medium px-4 sm:px-8 whitespace-nowrap"
             disabled={loading}
+            aria-label="Search"
           >
             {loading ? (
               <div className="spinner"></div>
             ) : (
-              'Search'
+              <>
+                <span className="hidden sm:inline">Search</span>
+                <svg className="sm:hidden" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="8" cy="8" r="5" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M12 12L16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </>
             )}
           </button>
         </div>

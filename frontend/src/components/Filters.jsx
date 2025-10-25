@@ -29,8 +29,8 @@ function Filters({ onClose }) {
   const activeFilterCount = Object.values(filters).filter(v => v !== null).length;
 
   return (
-    <div className="absolute top-20 left-4 z-20 w-full max-w-sm animate-slide-up">
-      <div className="bg-white rounded-2xl shadow-hard border-2 border-nevada-900 overflow-hidden">
+    <div className="absolute top-16 left-4 right-4 sm:left-4 sm:right-auto z-20 sm:w-full sm:max-w-sm animate-slide-up">
+      <div className="bg-white rounded-2xl shadow-hard border-2 border-nevada-900 overflow-hidden max-h-[calc(100vh-5rem)] flex flex-col">
         {/* Header */}
         <div className="bg-nevada-900 text-white px-6 py-5 flex justify-between items-center">
           <div>
@@ -51,7 +51,7 @@ function Filters({ onClose }) {
         </div>
 
         {/* Filter Content */}
-        <div className="p-6 space-y-5">
+        <div className="p-6 space-y-5 overflow-y-auto flex-1">
           {/* County Filter */}
           <div>
             <label className="block text-xs font-semibold text-nevada-500 uppercase tracking-wider mb-2.5">

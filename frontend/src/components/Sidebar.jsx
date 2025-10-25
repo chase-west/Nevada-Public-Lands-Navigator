@@ -11,7 +11,7 @@ import RepresentativeContact from './RepresentativeContact';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-function Sidebar() {
+function Sidebar({ mobileOpen, onMobileClose }) {
   const dispatch = useDispatch();
   const { selectedParcel } = useSelector((state) => state.parcels);
   const { parcels: comparisonParcels } = useSelector((state) => state.comparison);
@@ -48,16 +48,66 @@ function Sidebar() {
     }
   }, [selectedParcel]);
 
+  // Shared classes for both states
+  const baseClasses = "bg-white border-nevada-200 p-6 sm:p-8 overflow-y-auto scrollbar-modern";
+  const desktopClasses = "lg:w-[480px] lg:h-full lg:border-r lg:relative";
+  const mobileClasses = `
+    fixed bottom-0 left-0 right-0 z-30
+    lg:static
+    transition-transform duration-300 ease-out
+    ${mobileOpen ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'}
+    rounded-t-3xl lg:rounded-none
+    border-t-4 lg:border-t-0
+    shadow-[0_-4px_24px_rgba(0,0,0,0.15)] lg:shadow-none
+    max-h-[85vh] lg:max-h-full
+  `;
+
   if (!selectedParcel) {
     return (
-      <div className="w-full lg:w-[480px] bg-white border-r border-nevada-200 p-8 overflow-y-auto max-h-64 lg:max-h-full scrollbar-modern">
-        <Dashboard />
-      </div>
+      <>
+        {/* Mobile backdrop */}
+        {mobileOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black/40 z-20 transition-opacity duration-300"
+            onClick={onMobileClose}
+          />
+        )}
+
+        <div className={`${baseClasses} ${desktopClasses} ${mobileClasses}`}>
+          {/* Mobile drag handle */}
+          <div className="lg:hidden flex justify-center mb-4">
+            <button
+              onClick={onMobileClose}
+              className="w-12 h-1.5 bg-nevada-300 rounded-full hover:bg-nevada-400 transition-colors"
+              aria-label="Close sidebar"
+            />
+          </div>
+
+          <Dashboard />
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="w-full lg:w-[480px] bg-white border-r border-nevada-200 p-8 overflow-y-auto max-h-96 lg:max-h-full scrollbar-modern">
+    <>
+      {/* Mobile backdrop */}
+      {mobileOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/40 z-20 transition-opacity duration-300"
+          onClick={onMobileClose}
+        />
+      )}
+
+      <div className={`${baseClasses} ${desktopClasses} ${mobileClasses}`}>
+        {/* Mobile drag handle */}
+        <div className="lg:hidden flex justify-center mb-4">
+          <button
+            onClick={onMobileClose}
+            className="w-12 h-1.5 bg-nevada-300 rounded-full hover:bg-nevada-400 transition-colors"
+            aria-label="Close sidebar"
+          />
+        </div>
       <div className="flex justify-between items-start mb-6">
         <div>
           <p className="section-header mb-1">Parcel Details</p>
@@ -87,7 +137,10 @@ function Sidebar() {
             </div>
           )}
           <button
-            onClick={() => dispatch(clearSelectedParcel())}
+            onClick={() => {
+              dispatch(clearSelectedParcel());
+              onMobileClose();
+            }}
             className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl border-2 border-nevada-200 text-nevada-600 hover:border-nevada-900 hover:text-nevada-900 transition-all duration-200 hover:rotate-90"
             aria-label="Close"
           >
@@ -420,7 +473,8 @@ function Sidebar() {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

@@ -20,47 +20,50 @@
 }
 
 @layer components {
-  /* Modern Button Styles */
+  /* Modern Button Styles - Mobile-friendly touch targets (44px min) */
   .btn-primary {
-    @apply relative overflow-hidden px-6 py-2.5 bg-nevada-900 text-white text-sm font-medium
+    @apply relative overflow-hidden px-6 py-3 bg-nevada-900 text-white text-sm font-medium
            rounded-xl border border-nevada-900
            transition-all duration-300 ease-out
            hover:bg-nevada-800 hover:shadow-hard hover:-translate-y-0.5
-           active:translate-y-0 active:shadow-none;
+           active:translate-y-0 active:shadow-none
+           min-h-[44px] flex items-center justify-center;
   }
 
   .btn-secondary {
-    @apply relative px-6 py-2.5 bg-white text-nevada-900 text-sm font-medium
+    @apply relative px-6 py-3 bg-white text-nevada-900 text-sm font-medium
            rounded-xl border-2 border-nevada-200
            transition-all duration-300 ease-out
            hover:border-nevada-900 hover:shadow-medium hover:-translate-y-0.5
-           active:translate-y-0 active:shadow-none;
+           active:translate-y-0 active:shadow-none
+           min-h-[44px] flex items-center justify-center;
   }
 
   .btn-ghost {
-    @apply px-6 py-2.5 text-nevada-700 text-sm font-medium
+    @apply px-6 py-3 text-nevada-700 text-sm font-medium
            rounded-xl border-2 border-transparent
            transition-all duration-200
-           hover:bg-nevada-100 hover:text-nevada-900;
+           hover:bg-nevada-100 hover:text-nevada-900
+           min-h-[44px] flex items-center justify-center;
   }
 
-  /* Sophisticated Card System */
+  /* Sophisticated Card System - Responsive padding */
   .card {
-    @apply bg-white rounded-2xl p-6
+    @apply bg-white rounded-2xl p-4 sm:p-6
            border border-nevada-100
            transition-all duration-300 ease-out
            hover:border-nevada-200 hover:shadow-soft;
   }
 
   .card-elevated {
-    @apply bg-white rounded-2xl p-6
+    @apply bg-white rounded-2xl p-4 sm:p-6
            shadow-medium border border-nevada-100
            transition-all duration-300 ease-out
            hover:shadow-hard hover:-translate-y-1;
   }
 
   .card-glass {
-    @apply bg-white/80 backdrop-blur-lg rounded-2xl p-6
+    @apply bg-white/80 backdrop-blur-lg rounded-2xl p-4 sm:p-6
            border border-white/20 shadow-soft
            transition-all duration-300;
   }
@@ -119,10 +122,17 @@
 }
 
 @layer utilities {
-  /* Custom Scrollbar */
+  /* Custom Scrollbar - Smaller on mobile */
   .scrollbar-modern::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
+  }
+
+  @media (min-width: 640px) {
+    .scrollbar-modern::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
   }
 
   .scrollbar-modern::-webkit-scrollbar-track {
@@ -137,6 +147,11 @@
 
   .scrollbar-modern::-webkit-scrollbar-thumb:hover {
     background: theme('colors.nevada.400');
+  }
+
+  /* Touch-friendly utilities */
+  .touch-manipulation {
+    touch-action: manipulation;
   }
 
   /* Text Effects */
@@ -154,6 +169,20 @@
   .stagger-2 { animation-delay: 0.2s; }
   .stagger-3 { animation-delay: 0.3s; }
   .stagger-4 { animation-delay: 0.4s; }
+}
+
+/* Mobile-specific optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .hover\:shadow-brutal:hover {
+    box-shadow: inherit;
+  }
+
+  /* Increase tap target sizes slightly on touch devices */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
 
 /* Ensure Mapbox CSS loads properly */

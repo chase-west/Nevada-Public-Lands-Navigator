@@ -87,7 +87,7 @@ function WelcomeTutorial() {
   const isLastStep = currentStep === TUTORIAL_STEPS.length - 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 animate-fade-in">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-nevada-900/60 backdrop-blur-sm"
@@ -95,7 +95,7 @@ function WelcomeTutorial() {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-hard border-2 border-nevada-900 overflow-hidden animate-scale-in">
+      <div className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-hard border-2 border-nevada-900 overflow-hidden animate-scale-in">
         {/* Progress Bar */}
         <div className="h-1.5 bg-nevada-100">
           <div
@@ -105,21 +105,21 @@ function WelcomeTutorial() {
         </div>
 
         {/* Content */}
-        <div className="p-8 sm:p-12">
+        <div className="p-6 sm:p-8 md:p-12">
           {/* Icon */}
-          <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-nevada-50 to-nevada-100 border-2 border-nevada-200">
+          <div className="flex justify-center mb-4 sm:mb-6">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-nevada-50 to-nevada-100 border-2 border-nevada-200">
               {step.icon}
             </div>
           </div>
 
           {/* Title */}
-          <h2 className="text-3xl font-bold text-nevada-900 text-center mb-4 tracking-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-nevada-900 text-center mb-3 sm:mb-4 tracking-tight">
             {step.title}
           </h2>
 
           {/* Description */}
-          <p className="text-lg text-nevada-700 text-center leading-relaxed mb-8">
+          <p className="text-base sm:text-lg text-nevada-700 text-center leading-relaxed mb-6 sm:mb-8">
             {step.description}
           </p>
 
@@ -140,34 +140,34 @@ function WelcomeTutorial() {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
             <button
               onClick={handleSkip}
-              className="btn-ghost text-nevada-600 hover:text-nevada-900"
+              className="btn-ghost text-nevada-600 hover:text-nevada-900 order-2 sm:order-1"
             >
               Skip Tutorial
             </button>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 order-1 sm:order-2">
               {currentStep > 0 && (
                 <button
                   onClick={handlePrev}
-                  className="btn-secondary"
+                  className="btn-secondary flex-1 sm:flex-initial"
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    Back
+                    <span className="hidden sm:inline">Back</span>
                   </div>
                 </button>
               )}
 
               <button
                 onClick={handleNext}
-                className="btn-primary"
+                className="btn-primary flex-1 sm:flex-initial"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   {isLastStep ? 'Get Started' : 'Next'}
                   {!isLastStep && (
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
