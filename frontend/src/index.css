@@ -199,14 +199,41 @@
 .mapboxgl-ctrl-group {
   @apply rounded-xl border-2 border-nevada-200 shadow-medium overflow-hidden;
   background: white !important;
+  z-index: 15 !important; /* Ensure controls are above gradient backgrounds */
 }
 
 .mapboxgl-ctrl-group button {
   @apply transition-all duration-200;
+  pointer-events: auto !important; /* Ensure buttons are clickable */
 }
 
 .mapboxgl-ctrl-group button:hover {
   @apply bg-nevada-100;
+}
+
+/* Position Mapbox controls */
+.mapboxgl-ctrl-top-right {
+  top: 100px; /* Move down on mobile to avoid our custom nav */
+  right: 12px;
+}
+
+@media (min-width: 1024px) {
+  .mapboxgl-ctrl-top-right {
+    top: 12px; /* Normal position on desktop */
+    right: 12px;
+  }
+}
+
+/* Attribution - moved to bottom-left */
+.mapboxgl-ctrl-bottom-left {
+  bottom: 8px;
+  left: 8px;
+  z-index: 5;
+}
+
+.mapboxgl-ctrl-attrib {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(4px);
 }
 
 /* Loading Spinner */

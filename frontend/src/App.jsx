@@ -123,25 +123,27 @@ function App() {
         <Map />
 
         {/* Mobile Top Navigation Bar - MOBILE ONLY */}
-        <div className="lg:hidden absolute top-0 left-0 right-0 z-10 p-3 bg-gradient-to-b from-black/20 to-transparent pointer-events-none">
-          <div className="pointer-events-auto flex flex-col gap-2">
-            {/* Search Bar - Compact */}
-            <div className="w-full max-w-[200px]">
-              <SearchBar compact={true} />
-            </div>
-
-            {/* Action Buttons - Row underneath */}
+        <div className="lg:hidden absolute top-0 left-0 right-0 z-10 p-3 bg-gradient-to-b from-black/20 via-black/10 to-transparent pointer-events-none">
+          <div className="pointer-events-auto flex flex-col gap-2 max-w-[250px]">
+            {/* Search Bar + Filters - Top Row */}
             <div className="flex items-center gap-2">
+              <div className="flex-1 max-w-[200px]">
+                <SearchBar compact={true} />
+              </div>
+
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="btn-primary shadow-medium w-10 h-10 p-0 min-h-0"
+                className="btn-primary shadow-medium w-10 h-10 p-0 min-h-0 flex-shrink-0"
                 aria-label={showFilters ? 'Close filters' : 'Open filters'}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M2 4H14M4 8H12M6 12H10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
               </button>
+            </div>
 
+            {/* Other Action Buttons - Second Row */}
+            <div className="flex items-center gap-2">
               <button
                 onClick={handleWashoeFilter}
                 className={`shadow-medium transition-all duration-200 w-10 h-10 p-0 min-h-0 ${

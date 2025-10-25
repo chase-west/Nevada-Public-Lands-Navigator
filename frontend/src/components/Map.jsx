@@ -39,9 +39,17 @@ function Map() {
         [-113.0, 43.0]  // Northeast - prevent panning too far
       ],
       renderWorldCopies: false,
+      attributionControl: false, // Remove default attribution to reposition it
     });
 
+    // Add navigation controls (zoom buttons) to top-right
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    // Add attribution to bottom-left (away from our sidebar toggle button)
+    map.current.addControl(new mapboxgl.AttributionControl({
+      compact: true,
+      customAttribution: ''
+    }), 'bottom-left');
 
     map.current.on('load', () => {
       // Mark map as loaded
