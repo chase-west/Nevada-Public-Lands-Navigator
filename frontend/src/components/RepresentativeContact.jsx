@@ -13,13 +13,14 @@ const NEVADA_SENATORS = [
   {
     name: 'Jacky Rosen',
     party: 'Democrat',
-    email: 'https://www.rosen.senate.gov/contact',
+    email: 'https://www.rosen.senate.gov/email-jacky/',
     phone: '(202) 224-6244',
     image: '👤',
   },
 ];
 
 const NEVADA_REPRESENTATIVES = {
+  // District 2 - Northern Nevada (Washoe, Douglas, Lyon, Churchill, Storey, Carson City, Elko, Eureka, Humboldt, Lander, Pershing, White Pine, most of Lincoln)
   'Washoe': {
     house: {
       name: 'Mark Amodei',
@@ -27,17 +28,6 @@ const NEVADA_REPRESENTATIVES = {
       party: 'Republican',
       email: 'https://amodei.house.gov/contact',
       phone: '(202) 225-6155',
-      image: '👤',
-    },
-    senators: NEVADA_SENATORS,
-  },
-  'Clark': {
-    house: {
-      name: 'Dina Titus',
-      district: 'NV-01',
-      party: 'Democrat',
-      email: 'https://titus.house.gov/contact',
-      phone: '(202) 225-5965',
       image: '👤',
     },
     senators: NEVADA_SENATORS,
@@ -64,7 +54,73 @@ const NEVADA_REPRESENTATIVES = {
     },
     senators: NEVADA_SENATORS,
   },
+  'Churchill': {
+    house: {
+      name: 'Mark Amodei',
+      district: 'NV-02',
+      party: 'Republican',
+      email: 'https://amodei.house.gov/contact',
+      phone: '(202) 225-6155',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  'Storey': {
+    house: {
+      name: 'Mark Amodei',
+      district: 'NV-02',
+      party: 'Republican',
+      email: 'https://amodei.house.gov/contact',
+      phone: '(202) 225-6155',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  'Carson City': {
+    house: {
+      name: 'Mark Amodei',
+      district: 'NV-02',
+      party: 'Republican',
+      email: 'https://amodei.house.gov/contact',
+      phone: '(202) 225-6155',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
   'Elko': {
+    house: {
+      name: 'Mark Amodei',
+      district: 'NV-02',
+      party: 'Republican',
+      email: 'https://amodei.house.gov/contact',
+      phone: '(202) 225-6155',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  'Eureka': {
+    house: {
+      name: 'Mark Amodei',
+      district: 'NV-02',
+      party: 'Republican',
+      email: 'https://amodei.house.gov/contact',
+      phone: '(202) 225-6155',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  'Humboldt': {
+    house: {
+      name: 'Mark Amodei',
+      district: 'NV-02',
+      party: 'Republican',
+      email: 'https://amodei.house.gov/contact',
+      phone: '(202) 225-6155',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  'Lander': {
     house: {
       name: 'Mark Amodei',
       district: 'NV-02',
@@ -86,7 +142,77 @@ const NEVADA_REPRESENTATIVES = {
     },
     senators: NEVADA_SENATORS,
   },
-  // Default for any other counties
+  'White Pine': {
+    house: {
+      name: 'Mark Amodei',
+      district: 'NV-02',
+      party: 'Republican',
+      email: 'https://amodei.house.gov/contact',
+      phone: '(202) 225-6155',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  // District 1 - Eastern Clark County (parts of Las Vegas, Henderson, Paradise, Boulder City)
+  // Note: Clark County is split among districts 1, 3, and 4
+  // Using District 1 (Dina Titus) as default for Clark County
+  'Clark': {
+    house: {
+      name: 'Dina Titus',
+      district: 'NV-01',
+      party: 'Democrat',
+      email: 'https://titus.house.gov/contact',
+      phone: '(202) 225-5965',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  // District 4 - Central Nevada (Esmeralda, Mineral, Nye, Lincoln, parts of northern Clark County)
+  'Esmeralda': {
+    house: {
+      name: 'Steven Horsford',
+      district: 'NV-04',
+      party: 'Democrat',
+      email: 'https://horsford.house.gov/contact',
+      phone: '(202) 225-9894',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  'Mineral': {
+    house: {
+      name: 'Steven Horsford',
+      district: 'NV-04',
+      party: 'Democrat',
+      email: 'https://horsford.house.gov/contact',
+      phone: '(202) 225-9894',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  'Nye': {
+    house: {
+      name: 'Steven Horsford',
+      district: 'NV-04',
+      party: 'Democrat',
+      email: 'https://horsford.house.gov/contact',
+      phone: '(202) 225-9894',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  'Lincoln': {
+    house: {
+      name: 'Steven Horsford',
+      district: 'NV-04',
+      party: 'Democrat',
+      email: 'https://horsford.house.gov/contact',
+      phone: '(202) 225-9894',
+      image: '👤',
+    },
+    senators: NEVADA_SENATORS,
+  },
+  // Default for any other counties (using District 2 as it covers most rural areas)
   'default': {
     house: {
       name: 'Mark Amodei',
@@ -273,23 +399,6 @@ Sincerely,
           </p>
         </div>
       )}
-
-      {/* Call Script */}
-      <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-        <h4 className="font-semibold text-sm text-white mb-3 flex items-center gap-2">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-white">
-            <path d="M4 2H6L7 5L5.5 6C6 7.5 7 8.5 8.5 9L10 7.5L13 8.5V10.5C13 11.0523 12.5523 11.5 12 11.5C7.30558 11.5 3.5 7.69442 3.5 3C3.5 2.44772 3.94772 2 4.5 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          </svg>
-          Phone Call Script
-        </h4>
-        <div className="text-xs text-white/80 leading-relaxed space-y-2">
-          <p><span className="font-semibold text-white">1.</span> "Hello, my name is [YOUR NAME] and I'm calling as a constituent from [CITY], Nevada."</p>
-          <p><span className="font-semibold text-white">2.</span> "I'm calling about {parcel.bill_name || 'the proposed federal land transfer'} affecting {parcel.name}."</p>
-          <p><span className="font-semibold text-white">3.</span> "I [support/oppose] this proposal because [YOUR REASON]."</p>
-          <p><span className="font-semibold text-white">4.</span> "I urge [REPRESENTATIVE NAME] to consider the community impact when voting on this matter."</p>
-          <p><span className="font-semibold text-white">5.</span> "Thank you for your time."</p>
-        </div>
-      </div>
 
       {/* Additional Resources */}
       <div className="p-4 bg-white/10 rounded-xl border border-white/30">

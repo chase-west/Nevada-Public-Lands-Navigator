@@ -142,7 +142,7 @@ function Sidebar({ mobileOpen, onMobileClose }) {
           onTouchEnd={handleTouchEnd}
         >
           <div className="w-12 h-1.5 bg-nevada-400 rounded-full mb-1"></div>
-        </div>
+         </div>
 
       <div className="flex justify-between items-start mb-6">
         <div>
