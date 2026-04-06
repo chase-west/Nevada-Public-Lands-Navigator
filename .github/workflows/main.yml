@@ -2,7 +2,7 @@ name: Prevent Supabase Pause
 
 on:
   schedule:
-    # Run twice a week (e.g., Monday and Thursday at midnight UTC)
+    # Run twice a week (Monday and Thursday at midnight UTC)
     - cron: '0 0 * * 1,4'
   workflow_dispatch: # Allows manual triggering from the GitHub Actions tab
 
@@ -10,22 +10,29 @@ jobs:
   keep-alive:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase Database
+      - name: Ping Supabase to prevent pause
         env:
-          # Add this secret in your GitHub repository settings:
-          # Settings > Secrets and variables > Actions > New repository secret
-          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          if [ -z "$SUPABASE_DB_URL" ]; then
-            echo "Error: SUPABASE_DB_URL secret is not defined."
-            echo "Please define SUPABASE_DB_URL in your GitHub repository secrets."
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "Error: SUPABASE_URL or SUPABASE_ANON_KEY secret is not defined."
+            echo "Please add these in: Settings > Secrets and variables > Actions > New repository secret"
             exit 1
           fi
 
-          echo "Pinging Database to keep it active..."
-          
-          # Using PostgreSQL client (psql is pre-installed on ubuntu-latest runners) 
-          # to execute a simple, low-cost query
-          psql "$SUPABASE_DB_URL" -c "SELECT 1 as ping;"
+          echo "Pinging Supabase REST API to keep project active..."
 
-          echo "Ping successful! Supabase DB will stay active."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${SUPABASE_URL}/rest/v1/" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+
+          echo "HTTP response: $HTTP_STATUS"
+
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+            echo "Ping successful! Supabase project will stay active."
+          else
+            echo "Error: Unexpected HTTP status $HTTP_STATUS from Supabase."
+            exit 1
+          fi
