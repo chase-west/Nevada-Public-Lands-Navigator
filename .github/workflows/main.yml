@@ -15,24 +15,42 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
-            echo "Error: SUPABASE_URL or SUPABASE_ANON_KEY secret is not defined."
-            echo "Please add these in: Settings > Secrets and variables > Actions > New repository secret"
+          if [ -z "$SUPABASE_URL" ]; then
+            echo "Error: SUPABASE_URL secret is not defined."
+            echo "Please add this in: Settings > Secrets and variables > Actions > New repository secret"
             exit 1
           fi
 
-          echo "Pinging Supabase REST API to keep project active..."
+          SUPABASE_URL="${SUPABASE_URL%/}"
 
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            "${SUPABASE_URL}/rest/v1/" \
-            -H "apikey: ${SUPABASE_ANON_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+          if [ -n "$SUPABASE_ANON_KEY" ]; then
+            echo "Pinging Supabase REST API to keep project active..."
+            REST_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+              "${SUPABASE_URL}/rest/v1/" \
+              -H "apikey: ${SUPABASE_ANON_KEY}" \
+              -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
 
-          echo "HTTP response: $HTTP_STATUS"
+            echo "REST API response: $REST_STATUS"
 
-          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
-            echo "Ping successful! Supabase project will stay active."
+            if [ "$REST_STATUS" -ge 200 ] && [ "$REST_STATUS" -lt 400 ]; then
+              echo "Ping successful! Supabase project will stay active."
+              exit 0
+            fi
+
+            echo "::warning::Supabase REST API returned $REST_STATUS; falling back to auth health check."
           else
-            echo "Error: Unexpected HTTP status $HTTP_STATUS from Supabase."
+            echo "SUPABASE_ANON_KEY not provided; using auth health check instead."
+          fi
+
+          echo "Pinging Supabase Auth health endpoint..."
+          HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${SUPABASE_URL}/auth/v1/health")
+
+          echo "Auth health response: $HEALTH_STATUS"
+
+          if [ "$HEALTH_STATUS" -ge 200 ] && [ "$HEALTH_STATUS" -lt 400 ]; then
+            echo "Health check successful! Supabase project will stay active."
+          else
+            echo "Error: Unexpected HTTP status $HEALTH_STATUS from Supabase health endpoint."
             exit 1
           fi
